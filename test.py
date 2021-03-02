@@ -46,13 +46,9 @@ class x2_keras_class():
                 n=1
                 if prozent < crash_filter*-1:#dirooz az emrooz behtar boode
                     emrooz = all_close_filter[i-1]*(1-(crash_filter/100))
-                    all_close_filter.append(emrooz)
                 elif prozent > crash_filter:#dirooz az emrooz badtar boode
                     emrooz = all_close_filter[i-1]*(1+(crash_filter/100))
-                    all_close_filter.append(emrooz)
-                else:
-                    all_close_filter.append(all_close[i])
-
+                all_close_filter.append(emrooz)
         plt.plot(all_close, color = 'red', label = 'close')
         plt.plot(all_close_filter, color = 'black', label = 'filter')
         plt.legend()
@@ -65,39 +61,36 @@ class x2_keras_class():
         data_btc.reverse()
         #from pandas.io.json import json_normalize
         #exit = json_normalize(data_btc)
-        
-        all_close  = []
-        for i in np.arange(data_count):
-            all_close.append(data_btc[i]['close'])
+
+        all_close = [data_btc[i]['close'] for i in np.arange(data_count)]
         all_close = np.array(all_close,dtype=float)
         x2_keras_class.stossdaempfer(all_close, 2.5)
         ema_satz, ema_drittel = x2_keras_class.ema (all_close, data_count)
         satz_wurfel  = []
         wort_zelle  = []
         horuf_zelle  = []
-        ema_count = 0
-
-        for i in np.arange(jomle):
+        for ema_count, i in enumerate(np.arange(jomle)):
             wort_zelle  = []
             for j in np.arange(kalame):
-                horuf_zelle  = []
-                horuf_zelle.append(data_btc[j+i]['close'])
-                horuf_zelle.append(data_btc[j+i]['max'])
-                horuf_zelle.append(data_btc[j+i]['min'])
-                horuf_zelle.append(data_btc[j+i]['volume'])
-                horuf_zelle.append(data_btc[j+i]['volumeQuote'])
-                horuf_zelle.append(ema_satz[ema_count])
-                horuf_zelle.append(ema_drittel[ema_count])
+                horuf_zelle = [
+                    data_btc[j + i]['close'],
+                    data_btc[j + i]['max'],
+                    data_btc[j + i]['min'],
+                    data_btc[j + i]['volume'],
+                    data_btc[j + i]['volumeQuote'],
+                    ema_satz[ema_count],
+                    ema_drittel[ema_count],
+                ]
+
                 wort_zelle.append(horuf_zelle)
                 horuf_zelle=None
-            ema_count += 1
             satz_wurfel.append(wort_zelle)
             wort_zelle=None
         #test vergleich
         zeig = satz_wurfel[80]
         target_diferenz = np.array([all_close[i+kalame]-all_close[i+kalame-1]  for  i in range(jomle)],dtype=float)
         target_prozenz = np.array([x2_keras_class.get_prozent(all_close[i+kalame-1], all_close[i+kalame], 0)-100  for  i in range(jomle)],dtype=float)
-        
+
         target = np.array([data_btc[i+kalame]['close']  for  i in range(jomle)])
         satz_wurfel = np.array(satz_wurfel)
         target = np.array([data_btc[i+kalame]['close']  for  i in range(jomle)])
@@ -132,11 +125,10 @@ class x2_keras_class():
         for i in np.arange(jomle):
             wort_zelle  = []
             for j in np.arange(kalame):
-                # hier sollte noch eine schleife kommen mit count_of_values als range. aber ich war faul und habe 5 Sätze gesetzt. 
-                horuf_zelle  = [] 
-                horuf_zelle.append(data_btc[j+i]*1)
+                # hier sollte noch eine schleife kommen mit count_of_values als range. aber ich war faul und habe 5 Sätze gesetzt.
+                horuf_zelle = [data_btc[j+i] * 1]
                 test_target_hilfe += int(data_btc[j+i]*1)
-        
+
                 horuf_zelle.append(data_btc[j+i]*2)
                 test_target_hilfe += data_btc[j+i]*2
 

@@ -107,11 +107,10 @@ class aa1_daten_hilfe_class():
         for i in np.arange(jomle):
             wort_zelle  = []
             for j in np.arange(kalame):
-                # hier sollte noch eine schleife kommen mit count_of_values als range. aber ich war faul und habe 5 Sätze gesetzt. 
-                horuf_zelle  = [] 
-                horuf_zelle.append(data_btc[j+i]*1)
+                # hier sollte noch eine schleife kommen mit count_of_values als range. aber ich war faul und habe 5 Sätze gesetzt.
+                horuf_zelle = [data_btc[j+i] * 1]
                 test_target_hilfe += int(data_btc[j+i]*1)
-        
+
                 horuf_zelle.append(data_btc[j+i]*2)
                 test_target_hilfe += data_btc[j+i]*2
 
@@ -144,11 +143,8 @@ class aa1_daten_hilfe_class():
                 prozent="0"+prozent
         return prozent
     def get_polar(mutter,kind):
-        polar = 0 
-        if mutter >kind:
-            polar = -1
-        else:
-            polar = 1
+        polar = 0
+        polar = -1 if mutter >kind else 1
         return polar
     def ema (all_close, data_count, ema1, ema2):
         ema_satz = [all_close[0]]
@@ -181,10 +177,7 @@ class aa1_daten_hilfe_class():
         counter = 0
         fehler = 0
         for wert in results:
-            if wert >= 0.25:
-                wert = 1
-            else:
-                wert = 0
+            wert = 1 if wert >= 0.25 else 0
             if wert != y_test[counter]:
                 fehler += 1
             counter += 1
@@ -244,8 +237,8 @@ class aa1_daten_hilfe_class():
         min = np.array(min,dtype=float)
         volume = np.array(volume,dtype=float)
         volumeQuote = np.array(volumeQuote,dtype=float)
-        volume_avrage_btc = volume_avrage_btc/reale_zahl
-        close_avrage = close_avrage/reale_zahl
+        volume_avrage_btc /= reale_zahl
+        close_avrage /= reale_zahl
         ema_satz, ema_drittel = aa1_daten_query_class.ema (close, reale_zahl, ema1, ema2)
         ema_satz = np.array(ema_satz, dtype=float)
         ema_drittel = np.array(ema_drittel, dtype=float)
@@ -290,8 +283,8 @@ class aa1_daten_hilfe_class():
         min = np.array(min,dtype=float)
         volume = np.array(volume,dtype=float)
         volumeQuote = np.array(volumeQuote,dtype=float)
-        volume_avrage_btc = volume_avrage_btc/reale_zahl
-        close_avrage = close_avrage/reale_zahl
+        volume_avrage_btc /= reale_zahl
+        close_avrage /= reale_zahl
         return close, max, min, volume, volumeQuote, Tag, volume_avrage_btc, close_avrage
     def Hitbtc_curency_list():
         #currency_list = requests.get("https://api.hitbtc.com/api/2/public/currency").json()
@@ -323,9 +316,7 @@ class aa1_daten_hilfe_class():
         satz_wurfel  = []
         wort_zelle  = []
         horuf_zelle  = []
-        ema_count = 0
-
-        for i in np.arange(jomle):
+        for ema_count, i in enumerate(np.arange(jomle)):
             wort_zelle  = []
             for j in np.arange(kalame):
                 horuf_zelle  = []
@@ -355,10 +346,9 @@ class aa1_daten_hilfe_class():
 
                 horuf_zelle.append(ema_satz[ema_count])
                 horuf_zelle.append(ema_drittel[ema_count])
-                
+
                 wort_zelle.append(horuf_zelle)
                 horuf_zelle=None
-            ema_count += 1
             satz_wurfel.append(wort_zelle)
             wort_zelle=None
         #test vergleich
@@ -375,7 +365,7 @@ class aa1_daten_hilfe_class():
         last_bood   = 0
         for i in np.arange(len(wert.shape)):
             dimensionen.append(wert.shape[i])
-            count_bood1 = count_bood1 * wert.shape[i]
+            count_bood1 *= wert.shape[i]
             last_bood = wert.shape[i]
         close_scala = MinMaxScaler(feature_range = (0, 1))
         nabardeboon = wert.reshape(count_bood1, last_bood)

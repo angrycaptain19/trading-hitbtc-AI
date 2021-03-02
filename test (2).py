@@ -82,8 +82,8 @@ def hitbtc_query_mit_ema(Coin_symbol, EMA_periode, data_count, ema1, ema2, kalam
         min = np.array(min,dtype=float)
         volume = np.array(volume,dtype=float)
         volumeQuote = np.array(volumeQuote,dtype=float)
-        volume_avrage_btc = volume_avrage_btc/reale_zahl
-        close_avrage = close_avrage/reale_zahl
+        volume_avrage_btc /= reale_zahl
+        close_avrage /= reale_zahl
         ema_satz, ema_drittel, VWMA  = ema_berechner (close, reale_zahl, ema1, ema2, volume)
         ema_satz = np.array(ema_satz, dtype=float)
         ema_drittel = np.array(ema_drittel, dtype=float)

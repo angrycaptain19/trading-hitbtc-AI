@@ -94,11 +94,10 @@ class x2_keras_class():
         for i in np.arange(jomle):
             wort_zelle  = []
             for j in np.arange(kalame):
-                # hier sollte noch eine schleife kommen mit count_of_values als range. aber ich war faul und habe 5 Sätze gesetzt. 
-                horuf_zelle  = [] 
-                horuf_zelle.append(data_btc[j+i]*1)
+                # hier sollte noch eine schleife kommen mit count_of_values als range. aber ich war faul und habe 5 Sätze gesetzt.
+                horuf_zelle = [data_btc[j+i] * 1]
                 test_target_hilfe += int(data_btc[j+i]*1)
-        
+
                 horuf_zelle.append(data_btc[j+i]*2)
                 test_target_hilfe += data_btc[j+i]*2
 
@@ -229,11 +228,10 @@ class x2_keras_class():
         exists = os.path.isfile(model_etiket)
         if exists:
             regressor = load_model(model_etiket)
-            #epochen = epochen/10
-            history = regressor.fit(x_train, y_train, epochs = epochen, validation_data = (x_test, y_test))
         else:
             regressor = x2_keras_class.lasagna_x(x_train)
-            history = regressor.fit(x_train, y_train, epochs = epochen, validation_data = (x_test, y_test))
+        #epochen = epochen/10
+        history = regressor.fit(x_train, y_train, epochs = epochen, validation_data = (x_test, y_test))
         regressor.save(model_etiket)
 
         results_test  = regressor.predict(x_test)#array([[0.08052856],[0.05391689]], dtype=float32)
@@ -244,7 +242,7 @@ class x2_keras_class():
         y_test = x2_keras_class.fit_trasport_zurueck(y_test, close_scala)
         fehler, ohne_reaktion = x2_keras_class.fehler_rechner(results_test, y_test)
         x2_keras_class.diagramm(results_test, y_test, Coin_symbol, history, epochen, fehler, jomle, kalame, ohne_reaktion, tozih, all_close, ema_satz, ema_drittel)
-        
+
         return results_test, y_test
 
 

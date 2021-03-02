@@ -12,7 +12,11 @@ def estimate_win_rate(nb_simulation, nb_player, hole_card, community_card=None):
     hole_card = gen_cards(hole_card)
 
     # Estimate the win count by doing a Monte Carlo simulation
-    win_count = sum([montecarlo_simulation(nb_player, hole_card, community_card) for _ in range(nb_simulation)])
+    win_count = sum(
+        montecarlo_simulation(nb_player, hole_card, community_card)
+        for _ in range(nb_simulation)
+    )
+
     return 1.0 * win_count / nb_simulation
 
 

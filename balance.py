@@ -44,12 +44,15 @@ if __name__ == "__main__":
         print("Selling at %s" % best_price)
 
         order = client.new_order(client_order_id, 'ETHBTC', 'sell', eth_balance, best_price)
-        if 'error' not in order:
+        if 'error' in order:
+            print(order['error'])
+
+        else:
             if order['status'] == 'filled':
                 print("Order filled", order)
-            elif order['status'] == 'new' or order['status'] == 'partiallyFilled':
+            elif order['status'] in ['new', 'partiallyFilled']:
                 print("Waiting order...")
-                for k in range(0, 3):
+                for _ in range(3):
                     order = client.get_order(client_order_id, 20000)
                     print(order)
 
@@ -60,9 +63,6 @@ if __name__ == "__main__":
                 if 'status' in order and order['status'] != 'filled':
                     cancel = client.cancel_order(client_order_id)
                     print('Cancel order result', cancel)
-        else:
-            print(order['error'])
-
     # transfer all available BTC after trading to account balance
     balances = client.get_trading_balance()
     for balance in balances:
@@ -77,16 +77,16 @@ if __name__ == "__main__":
         if balance['currency'] == 'BTC' and float(balance['available']) > 0.101:
             payout = client.withdraw('BTC', '0.1', btc_address, '0.0005')
 
-            if 'error' not in payout:
+            if 'error' in payout:
+                print(payout['error'])
+
+            else:
                 transaction_id = payout['id']
                 print("Transaction ID: %s" % transaction_id)
-                for k in range(0, 5):
+                for _ in range(5):
                     time.sleep(20)
                     transaction = client.get_transaction(transaction_id)
                     print("Payout info", transaction)
-            else:
-                print(payout['error'])
-
 session = requests.session()
 session.auth = ("9STf5pZbMCnxOy+FUcHCj7xOwOGR95Gu", "JldVqSH+7xGVu1kKgU9h6tdBcjY6V7W5")
 b = session.get('https://api.hitbtc.com/api/2/order').json()

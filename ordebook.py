@@ -56,14 +56,12 @@ def get_prozent(mutter,kind,int0_str1):
     return prozent
 
 def get_prozent_array(mutter):
-    count=0
     first=0
     returnyy=[]
-    for i_set in mutter:
+    for count, i_set in enumerate(mutter):
         if count==0:
             first = i_set
         returnyy.append(get_prozent(first,i_set,0))
-        count+=1
     return returnyy
 
 def split_sequences(sequences, n_steps):
@@ -130,10 +128,10 @@ def parameter_u(ask_count, ask_price, bid_count, bid_price,result):
     bid_count   = daten_repair_1(sc,bid_count)
     bid_price   = daten_repair_1(sc,bid_price)
     #result   = daten_repair_1(sc,result)
-    ask_count   = ask_count[range(0, len(ask_count))]
-    ask_price      = ask_price[range(0, len(ask_price))]
-    bid_count    = bid_count[range(0 , len(bid_count))]
-    bid_price    = bid_price[range(0 , len(bid_price))]
+    ask_count = ask_count[range(len(ask_count))]
+    ask_price = ask_price[range(len(ask_price))]
+    bid_count = bid_count[range(len(bid_count))]
+    bid_price = bid_price[range(len(bid_price))]
     #result    = result[range(0 , len(result))]
     dataset = hstack(( ask_count, ask_price, bid_count, ask_price,  ask_price))#min max btv
     X, y = split_sequences(dataset, 1)
@@ -149,10 +147,8 @@ def time_macher(btc_result,symbol):
     db_coins = TinyDB('datenbank/coins_M1.json')
     db_coins2 = TinyDB('datenbank/coins_M1_mit_time.json')
     User = Query
-    btc_c=0
     bii=0
-    for doc in btc_result:
-        btc_c        +=1
+    for btc_c, doc in enumerate(btc_result, start=1):
         tm = doc['timestamp']
         close = doc['close']
         jahr = tm.split("-")[0]
@@ -255,7 +251,7 @@ def parameter(dade_vorgestern, javab_gestern, dade_gestern, javab_heute):
     defi = len(javab_heute) - len(dade_gestern)
     javab_heute         = javab_heute[defi:  len(javab_heute)]
 
-    ergebnis_heute = javab_heute    
+    ergebnis_heute = javab_heute
     sc = MinMaxScaler(feature_range = (0, 1))
     dade_vorgestern   = daten_repair_1(sc,dade_vorgestern)#array([[0.24125787],
     javab_gestern   = daten_repair_1(sc,javab_gestern)
@@ -263,10 +259,10 @@ def parameter(dade_vorgestern, javab_gestern, dade_gestern, javab_heute):
     javab_heute   = daten_repair_1(sc,javab_heute)
     #result   = daten_repair_1(sc,result)
     #result      = daten_repair_1(sc,result)
-    dade_vorgestern   = dade_vorgestern[range(0, len(dade_vorgestern))]
-    javab_gestern      = javab_gestern[range(0, len(javab_gestern))]
-    dade_gestern    = dade_gestern[range(0 , len(dade_gestern))]
-    javab_heute    = javab_heute[range(0 , len(javab_heute))]
+    dade_vorgestern = dade_vorgestern[range(len(dade_vorgestern))]
+    javab_gestern = javab_gestern[range(len(javab_gestern))]
+    dade_gestern = dade_gestern[range(len(dade_gestern))]
+    javab_heute = javab_heute[range(len(javab_heute))]
     #result    = result[range(0 , len(result))]
     dataset = hstack(( dade_vorgestern, javab_gestern))#min max btv
     dataset2 = hstack(( dade_gestern, javab_heute))#min max btv

@@ -41,9 +41,7 @@ class Client(object):
             print("in 10 secunden.......................................")
             time.sleep(10)
             flut()
-            return
-        else:
-            return
+        return
     def get_trading_balance(self,symbol_code,all_balance):
         konto_balance = 0
         konto = all_balance
@@ -53,7 +51,6 @@ class Client(object):
                 konto_balance += Decimal(konto['reserved'])
                 break
         return konto_balance
-        """Get my trading balance."""
     def get_trading_balance_all(self):
         konto = ""
         try:
@@ -62,7 +59,6 @@ class Client(object):
         except:
             Client.restart(self,konto,"get_trading_balance_all")
         return konto
-        """letzter Preis."""
     def get_last_price(self, symbol_code):
         konto = ""
         try:
@@ -71,12 +67,10 @@ class Client(object):
         except:
             Client.restart(self,konto,"get_last_price")
         return konto
-        """Get symbol."""
     def get_symbol(self, symbol_code):
         konto = self.session.get("%s/public/symbol/%s" % (self.url, symbol_code)).json()
         Client.restart(self,konto,"get_symbol")
         return konto
-        """Get orderbook. """
     def get_orderbook(self, symbol_code):
         konto = ""
         try:
@@ -84,7 +78,6 @@ class Client(object):
         except:
             Client.restart(self,konto,"get_orderbook")
         return konto
-        """Get orderbook ask. """
     def get_orderbook_best_preis(self, symbol_code,ask_or_bid,volum_filter,difrenz):
         konto = ""
         try:
@@ -103,8 +96,6 @@ class Client(object):
         if ask_or_bid=="ask":
             my_zahl = Decimal(konto_balance)-Decimal(difrenz)
         return str(my_zahl)
-    
-        """Get address for deposit."""
     def get_address(self, currency_code):#nashode
         konto = ""
         try:
@@ -112,7 +103,6 @@ class Client(object):
         except:
             Client.restart(self,konto,"get_address")
         return konto
-        """Get order info."""
     def get_order_info(self):
         #data = {'wait': wait} if wait is not None else {}
         #return self.session.get("%s/order/%s" % (self.url, client_order_id), params=data).json()
@@ -125,7 +115,6 @@ class Client(object):
         for konto in konto:
                 konto_balance = str(konto) +"<br><br>"+str(konto_balance)
         return konto_balance
-        """Get order info By Coin."""
     def cancel_order(self, client_order_id):
         konto = ""
         try:
@@ -133,7 +122,6 @@ class Client(object):
         except:
             Client.restart(self,konto,"cancel_order")
         return konto
-        """cancel order info By Coin."""
     def cancel_order_info_by_symbol(self, symbol_code):
         #data = {'wait': wait} if wait is not None else {}
         #return self.session.get("%s/order/%s" % (self.url, client_order_id), params=data).json()
@@ -154,16 +142,13 @@ class Client(object):
                 'currency': currency_code, 'amount': amount,
                 'type': 'bankToExchange' if to_exchange else 'exchangeToBank'
             }).json()
-        """Withdraw."""
     def withdraw(self, currency_code, amount, address, network_fee=None):
         data = {'currency': currency_code, 'amount': amount, 'address': address}
         if network_fee is not None:
             data['networkfee'] = network_fee
         return self.session.post("%s/account/crypto/withdraw" % self.url, data=data).json()
-        """Get transaction info."""
     def get_transaction(self, transaction_id):
         return self.session.get("%s/account/transactions/%s" % (self.url, transaction_id)).json()
-        """Get my Historiy coin."""
     def update_trade_history(self,db,User,db_archive,count):
         konto_balance = ""
         konto = ""
@@ -178,7 +163,6 @@ class Client(object):
                             #(Date                   ,symbol              ,Trade_id        ,order_id             ,side              ,quanty                ,price              ,volume                                                 ,fee              ,rabate,total)
                 #SQL.insert_db(konto['timestamp'],strkonto['symbol'],konto['id'],konto['orderId'],konto['side'],konto['quantity'],konto['price'],round(Decimal(konto['quantity'])*Decimal(konto['price']),9),konto['fee'],"0","0")
         return ""
-        """Get my Historiy coin."""
     def falsches_ende_beim_archiv(self,db,User,My_traid_symbol,count):
         konto_balance = ""
         konto = ""
@@ -203,7 +187,7 @@ class Client(object):
             Client.restart(self,konto,"new_order")
         return konto
     def get_ema(self,symbol_code,time,days):#mehwar
-        global sedf_ema_best 
+        global sedf_ema_best
         sedf_ema_best        =  0
         global sedf_ema_last
         sedf_ema_last        =  999999
@@ -223,17 +207,15 @@ class Client(object):
         last2  =        999999
         gestern  =        0
         for konto in kontos:
-                best  += Decimal(konto['max'])
-                if best2 < Decimal(konto['max']):
-                    best2  = Decimal(konto['max'])
-                last  += Decimal(konto['min'])
-                if last2  > Decimal(konto['min']):
-                    last2  = Decimal(konto['min'])
-                preis_summe   += Decimal(konto['close'])
-                gestern           = Decimal(konto['close'])
-                count+=1
-                #if count> (Decimal(days)/Decimal(1.5)):
-                    #break
+            best  += Decimal(konto['max'])
+            best2 = max(best2, Decimal(konto['max']))
+            last  += Decimal(konto['min'])
+            last2 = min(last2, Decimal(konto['min']))
+            preis_summe   += Decimal(konto['close'])
+            gestern           = Decimal(konto['close'])
+            count+=1
+                    #if count> (Decimal(days)/Decimal(1.5)):
+                        #break
         result         =  ((preis_summe/count)+gestern)/2
         sedf_ema_best  =  ((best/count)+best2)/2
         sedf_ema_last  =  ((last/count)+last2)/2
@@ -308,7 +290,7 @@ class Client(object):
         tendenz_indagine12        = 0
         global kurs_merker
         kurs_merker = ""
-        global sedf_ema_best 
+        global sedf_ema_best
         sedf_ema_best        =  0
         global sedf_ema_last
         sedf_ema_last        =  999999
@@ -349,42 +331,40 @@ class Client(object):
                     letzefuenf+=1
                     if letzefuenf == 1:
                         tendenz_indagine12 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 2:
-                        tendenz_indagine11 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 3:
-                        tendenz_indagine10 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 4:
-                        tendenz_indagine9 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 5:
-                        tendenz_indagine8 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 6:
-                        tendenz_indagine7 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 7:
-                        tendenz_indagine6 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 8:
-                        tendenz_indagine5 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 9:
-                        tendenz_indagine4 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 10:
+                    elif letzefuenf == 10:
                         tendenz_indagine3 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 11:
+                    elif letzefuenf == 11:
                         tendenz_indagine2 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
-                    if letzefuenf == 12:
+                    elif letzefuenf == 12:
                         tendenz_indagine1 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 2:
+                        tendenz_indagine11 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 3:
+                        tendenz_indagine10 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 4:
+                        tendenz_indagine9 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 5:
+                        tendenz_indagine8 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 6:
+                        tendenz_indagine7 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 7:
+                        tendenz_indagine6 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 8:
+                        tendenz_indagine5 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
+                    elif letzefuenf == 9:
+                        tendenz_indagine4 = (Decimal(konto['min'])+Decimal(konto['max'])+Decimal(konto['close']))/3
                 best  += Decimal(konto['max'])
-                if best2 < Decimal(konto['max']):
-                    best2  = Decimal(konto['max'])
+                best2 = max(best2, Decimal(konto['max']))
                 last  += Decimal(konto['min'])
-                if last2  > Decimal(konto['min']):
-                    last2  = Decimal(konto['min'])
+                last2 = min(last2, Decimal(konto['min']))
                 preis_summe   += Decimal(konto['close'])
                 gestern           = Decimal(konto['close'])
-            #if count> (Decimal(days)/Decimal(1.5)):
-                #break
+                #if count> (Decimal(days)/Decimal(1.5)):
+                    #break
         result         =  ((preis_summe/count)+gestern)/2
         sedf_ema_best  =  ((best/count)+best2+best2)/3
         sedf_ema_last  =  ((last/count)+last2+last2)/3
-        sedf_ema_long  =  sedf_ema_long/count_alle
+        sedf_ema_long /= count_alle
         return result
     def order_book_gewicht(self,symbol_code):#tarazo
         konto = ""
@@ -418,11 +398,7 @@ class Client(object):
         global letze_traid_info
         letze_traid_info =""
         kauf_preis = 0
-        my_volume = 0
-        my_quanty = 0
         abschluss = 0
-        count = 0
-        Nachkauf_stufe = 0
         vorher_kauf=0
         nachkauf_var1=0
         if bestand_anzahl_hitbtc >0:
@@ -431,6 +407,10 @@ class Client(object):
                 Client.restart(self,docs,"get_client_volume")
             except:
                 Client.restart(self,konto,"get_client_volume")
+            my_volume = 0
+            my_quanty = 0
+            count = 0
+            Nachkauf_stufe = 0
             for doc in docs:
                 count +=1
                 if doc['side'] == "buy": 
@@ -484,14 +464,14 @@ class Handel(object):#dalal
         return print_string
     def normal_buy(bye_report,buy,sell,symbol_code,volum_filter,soll_count,preis_differenz,durchschnit_preis,risikoClasse,order_art):
         """kaufsignal   1000stk -2% ist 1000"""
-        if buy=="1" and  (bye_report=="Nachkauf" or bye_report=="Pyramide"or bye_report=="Keras"):
+        if buy == "1" and bye_report in ["Nachkauf", "Pyramide", "Keras"]:
             if risikoClasse == 1:
                 client.new_order(time.time(),symbol_code,"buy",soll_count,order_art,durchschnit_preis)
                 print_string= "BUY("+str(round(soll_count*durchschnit_preis*7600,2))+")€" 
             if risikoClasse == 2:
                 mein_order_preis = client.get_orderbook_best_preis(symbol_code,"bid",volum_filter,preis_differenz)#bid ist Kauf  ask ist Verkauf
                 client.new_order(time.time(),symbol_code,"buy",soll_count,order_art,mein_order_preis)
-                print_string= "BUY("+str(round(soll_count*durchschnit_preis*7600,2))+")€" 
+                print_string= "BUY("+str(round(soll_count*durchschnit_preis*7600,2))+")€"
         else:
             print_string= "BUY("+str(round(soll_count*durchschnit_preis*7600,2))+")€"
         return print_string
@@ -592,12 +572,8 @@ class SQL(object):
             print(symbol_code)
         return ""
     def get_sql_price(db,User,symbol_code,side):
-        price = 0
         docs = db.search(User.symbol == symbol_code)
-        for doc in docs:
-            if doc['side'] == side:
-                price += Decimal(doc['price'])
-        return price
+        return sum(Decimal(doc['price']) for doc in docs if doc['side'] == side)
     def unic_archiv(User):
         db_archive = TinyDB('archive.json')
         db_archive.all()
@@ -723,14 +699,11 @@ class calc(object):
            #print (kurs_merker.split(",")[i])
             thise = kurs_merker.split(",")[i]
             if i!=0 and thise!="":
-                if Decimal(vorher) > Decimal(thise):
-                    eins_null+="1"
-                else:
-                    eins_null+="0"
+                eins_null += "1" if Decimal(vorher) > Decimal(thise) else "0"
                 zhl = calc.get_prozent(Decimal(vorher),Decimal(thise),0)
                 prozent_band+=str(zhl)+","
             vorher = kurs_merker.split(",")[i]
-   
+
         prozent_band=prozent_band
         winnwer=0
         looser=0
@@ -789,87 +762,42 @@ class calc(object):
                     Looser_p_king += lose_differenz
 
             if letzte_drei == "":#letzte drei
-                if Decimal(prozent_band.split(",")[i+0]) > 100:
-                    letzte_drei+="1"
-                else:
-                    letzte_drei+="0"
-                if Decimal(prozent_band.split(",")[i+1]) > 100:
-                    letzte_drei+="1"
-                else:
-                    letzte_drei+="0"
-                if Decimal(prozent_band.split(",")[i+2]) > 100:
-                    letzte_drei+="1"
-                else:
-                    letzte_drei+="0"
-                if Decimal(prozent_band.split(",")[i+3]) > 100:
-                    letzte_drei+="1"
-                else:
-                    letzte_drei+="0"
-
+                letzte_drei += "1" if Decimal(prozent_band.split(",")[i+0]) > 100 else "0"
+                letzte_drei += "1" if Decimal(prozent_band.split(",")[i+1]) > 100 else "0"
+                letzte_drei += "1" if Decimal(prozent_band.split(",")[i+2]) > 100 else "0"
+                letzte_drei += "1" if Decimal(prozent_band.split(",")[i+3]) > 100 else "0"
         if treffer!=0:
-            king = king/ treffer
-            queen = queen/ treffer
-            turm = turm/ treffer
-            springer = springer/ treffer
-            winner_p_king = winner_p_king/ treffer
+            king /= treffer
+            queen /= treffer
+            turm /= treffer
+            springer /= treffer
+            winner_p_king /= treffer
 
         else:
             winner_code ="Kein"
 
         if treffer_looser!=0:
-            king_looser = king_looser/ treffer_looser
-            queen_looser = queen_looser/ treffer_looser
-            turm_looser = turm_looser/ treffer_looser
-            springer_looser = springer_looser/ treffer_looser
-            Looser_p_king = Looser_p_king/ treffer_looser
+            king_looser /= treffer_looser
+            queen_looser /= treffer_looser
+            turm_looser /= treffer_looser
+            springer_looser /= treffer_looser
+            Looser_p_king /= treffer_looser
 
         else:
             looser_code ="Kein"
 
-        if king>100:
-            winner_code+="1"
-        else:
-            winner_code+="0"
-
-        if queen>100:
-            winner_code+="1"
-        else:
-            winner_code+="0"
-
-        if turm>100:
-            winner_code+="1"
-        else:
-            winner_code+="0"
-        if springer>100:
-            winner_code+="1"
-        else:
-            winner_code+="0"
-
-        if king_looser>100:
-            looser_code+="1"
-        else:
-            looser_code+="0"
-
-        if queen_looser>100:
-            looser_code+="1"
-        else:
-            looser_code+="0"
-
-        if turm_looser>100:
-            looser_code+="1"
-        else:
-            looser_code+="0"
-        if springer_looser>100:
-            looser_code+="1"
-        else:
-            looser_code+="0"
-
+        winner_code += "1" if king>100 else "0"
+        winner_code += "1" if queen>100 else "0"
+        winner_code += "1" if turm>100 else "0"
+        winner_code += "1" if springer>100 else "0"
+        looser_code += "1" if king_looser>100 else "0"
+        looser_code += "1" if queen_looser>100 else "0"
+        looser_code += "1" if turm_looser>100 else "0"
+        looser_code += "1" if springer_looser>100 else "0"
         if winner_code==letzte_drei:
             return round(winner_p_king,2)
-        elif looser_code==letzte_drei:
-            #return round(Looser_p_king,2)
-            return 0
         else:
+            #return round(Looser_p_king,2)
             return 0
     def get_richtung_dioden():
         minus_punkt=0
@@ -892,8 +820,7 @@ class calc(object):
         imput_verh      = 1/new_imput_sad
         new_output_sad  = output_defizit + Decimal(out_sad)
         output_verh     = 1/new_output_sad
-        result          = new_variable/output_verh*imput_verh
-        return result
+        return new_variable/output_verh*imput_verh
     def time_compars():
         global letze_traid_info 
         if letze_traid_info!="":
@@ -924,14 +851,12 @@ class calc(object):
         return prozent
     def eins_hoch_rechner(myint):
         prozent = 1
-        for g in range(int(myint)):
-            prozent = prozent*10
+        for _ in range(int(myint)):
+            prozent *= 10
         return prozent
     def soll_anzahl_new(EMA,neutral_stk,durchschnit_preis):#herz
         gesunken_in_proz    =  calc.get_prozent(EMA,durchschnit_preis,0) - 100
-        adding_count = neutral_stk +( neutral_stk * gesunken_in_proz*-1) + neutral_stk
-        return adding_count
-        """Get EMA."""
+        return neutral_stk +( neutral_stk * gesunken_in_proz*-1) + neutral_stk
     def soll_anzahl(EMA,neutral_stk,durchschnit_preis,method,sensibility):#herz
         gesunken_in_proz = durchschnit_preis /(EMA/100)
         gesunken_in_proz = 100 - gesunken_in_proz 
@@ -959,10 +884,9 @@ class calc(object):
             """start sellin"""
             bye_report += " Winn!! ,"
             soll_new = calc.get_alborz(Decimal(Preis['bid']),     stichprobe_kauf,     stichprobe_kauf*Decimal(1.01),    0,     bestand_anzahl_hitbtc)#Sell
-            if soll_new > bestand_anzahl_hitbtc:
-                soll_new = bestand_anzahl_hitbtc
+            soll_new = min(soll_new, bestand_anzahl_hitbtc)
             soll_new = soll_new*-1
-        elif letzter_Kauf > Decimal(Preis['bid'])*nachkauf_ab and Nachkauf_stufe <=2 :#................... nachkaufen ab 1.5% Verlust martin
+        elif letzter_Kauf > Decimal(Preis['bid'])*nachkauf_ab and Nachkauf_stufe <=2:#................... nachkaufen ab 1.5% Verlust martin
         #elif stichprobe_kauf > Decimal(Preis['bid'])*(nachkauf_ab):#................... nachkaufen ab 1.5% Verlust martin
             """Nach Kauf"""
             soll_new = calc.get_alborz(Decimal(Preis['bid']),     letzter_Kauf*(nachkauf_ab),     letzter_Kauf*Decimal(0.99),    0,     bestand_anzahl_hitbtc)#Buy
@@ -970,15 +894,13 @@ class calc(object):
             #soll_new = soll_new*-1#                                                   ab (0.95)  unter stichprobe_kauf Nachkauf dobarabar mishe 
             bye_report = "Nachkauf"
             anteil_prozent = anteil_prozent * 8
-            if soll_new < 0:
-                soll_new = 0
-            if soll_new > bestand_anzahl_hitbtc:
-                soll_new = bestand_anzahl_hitbtc
+            soll_new = max(soll_new, 0)
+            soll_new = min(soll_new, bestand_anzahl_hitbtc)
         elif letzter_Kauf > Decimal(Preis['bid'])* Decimal(1.05) and Nachkauf_stufe >=3:
             #soll_new = bestand_anzahl_hitbtc*-1
             bye_report += " Stopp lose 3%"
             """Stopp Loss"""
-        elif iq_result > 0 and gesamt_summe*8000 < 20: #                           Kaufen     pyramide
+        elif iq_result > 0 and gesamt_summe < 20 / 8000: #                           Kaufen     pyramide
             soll_new = ((vorrunde*Decimal(iq_result))/100)/durchschnit_preis
             #soll_new = neutral_stk# * calc.IQ()
             bye_report = "Pyramide"
@@ -1053,9 +975,8 @@ class druck(object):
         #db.update({'Trade_id': Trade_id+volume}, where('Trade_id') == Trade_id)
         return ""
     def print_beginn_and_titel_td(html_name,tit_tds):
-        file2 =open(html_name+'.html', 'w')
-        file2.write("")
-        file2.close()
+        with open(html_name+'.html', 'w') as file2:
+            file2.write("")
         global bilanz_html
         bilanz_html += druck.td_titel(tit_tds)
         druck.page_maker("bilanz",bilanz_html)
@@ -1100,8 +1021,7 @@ class druck(object):
             color="D05557"
         if my_st == 0:
             color="008000"
-        result ="<td style='padding:0px;' bgcolor= #"+color+">"+str(my_st)+"</td>"
-        return result
+        return "<td style='padding:0px;' bgcolor= #"+color+">"+str(my_st)+"</td>"
     def html_header():
         result  ="<style>html, body  {font-family: 'Comic Sans MS', cursive, sans-serif; }</style>"
         result  +="<body onload=myFunction();  style='padding:0px;' bgcolor= #c3c5e4>"
@@ -1113,32 +1033,52 @@ class druck(object):
         return result
     def td_str(my_st):
         color="44A1A8"
-        result ="<td style='padding:0px;' bgcolor= #"+color+">"+str(my_st)+"</td>"
-        return result
+        return "<td style='padding:0px;' bgcolor= #"+color+">"+str(my_st)+"</td>"
     def td_alborz(my_st,imput0,imput100,wert):
         color2  ="#44A1A8"
         my_width   = calc.get_alborz(wert,imput0,imput100,0,100)
         if my_width < 0:
             color2  ="#d15ed1"
             my_width    = my_width*-1
-        my_width   = my_width 
-        result ="<td style='padding:0px;' ><div style='padding:0px; width: 100; background: lavender;'><div style='padding:0px; width: "+str(my_width)+"; background: "+color2+";'>"+str(my_st)+"</div></div></td>"
-        return result
+        my_width   = my_width
+        return (
+            "<td style='padding:0px;' ><div style='padding:0px; width: 100; background: lavender;'><div style='padding:0px; width: "
+            + str(my_width)
+            + "; background: "
+            + color2
+            + ";'>"
+            + str(my_st)
+            + "</div></div></td>"
+        )
     def td_jay(my_st,voll,wert):
         color2  ="#44A1A8"
         if wert < 0:
             color2  ="red"
             voll    = voll*-1
         my_width   = calc.get_prozent(voll,wert,0)
-        my_width   = my_width 
-        result ="<td style='padding:0px;' ><div style='padding:0px; width: 100; background: lavender;'><div style='padding:0px; width: "+str(my_width)+"; background: "+color2+";'>"+str(my_st)+"</div></div></td>"
-        return result
+        my_width   = my_width
+        return (
+            "<td style='padding:0px;' ><div style='padding:0px; width: 100; background: lavender;'><div style='padding:0px; width: "
+            + str(my_width)
+            + "; background: "
+            + color2
+            + ";'>"
+            + str(my_st)
+            + "</div></div></td>"
+        )
     def td_jay_best(my_st,voll,wert):
         color2  ="#44A1A8"
         my_width   = calc.get_prozent(voll,wert,0)
-        my_width   = my_width 
-        result ="<td style='padding:0px;' ><div style='padding:0px; width: 100; background: lavender;'><div style='padding:0px; width: "+str(my_width)+"; background: "+color2+";'>"+str(my_st)+"</div></div></td>"
-        return result
+        my_width   = my_width
+        return (
+            "<td style='padding:0px;' ><div style='padding:0px; width: 100; background: lavender;'><div style='padding:0px; width: "
+            + str(my_width)
+            + "; background: "
+            + color2
+            + ";'>"
+            + str(my_st)
+            + "</div></div></td>"
+        )
     def td_titel(my_st):
         
         #result +="<script>function hide_zero() {document.getElementsByClassName('Neutral').style.visibility = 'hidden';alert();}</script></body><button onclick='hide_zero()'>Hide Neutral</button>"
@@ -1152,13 +1092,11 @@ class druck(object):
     def page_maker(page_name,innerHtml):#chap
         global create_html
         if create_html== 1:
-            file =open(page_name+'.html', 'r')
-            filetxt =file.read()
-            file.close()
+            with open(page_name+'.html', 'r') as file:
+                filetxt =file.read()
             time.sleep(1.5)
-            file2 =open(page_name+'.html', 'w')
-            file2.write(filetxt + innerHtml)
-            file2.close()
+            with open(page_name+'.html', 'w') as file2:
+                file2.write(filetxt + innerHtml)
         return ""
     def kino(html_m,My_traid_symbol,Coin_symbol,count_coints,ki_close,Nachkauf_stufe,gesamt_summe,
              vorrunde,empr,varkaufen_ab,EMA,durchschnit_preis,stichprobe_kauf,preis_round,buy,model_futur,letzter_Kauf,

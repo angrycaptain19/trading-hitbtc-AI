@@ -27,8 +27,7 @@ ergebnis = ["BTCUSD"]
 #ergebnis = aa1_daten_query_class.curency_list_hitbtc(EMA_periode, jomle, kalame, "hitbtc", volume_filter, ema1, ema2, Coin_count)
 satz_wurfel_G = []
 target_prozent_polar_G = []
-count = 0
-for Coin_symbol in ergebnis:
+for count, Coin_symbol in enumerate(ergebnis):
     #close, max, min, volume, volumeQuote, Tag, volume_avrage_btc, close_avrage, ema_satz, ema_drittel, target_diferenz, target_prozenz, target_polar = aa1_daten_query_class.hitbtc_query_mit_ema(Coin_symbol, EMA_periode, jomle + kalame, ema1, ema2, kalame)
     #close, max, min, volume, volumeQuote, ema_satz, ema_drittel, target_diferenz, target_prozenz, target_polar = aa1_daten_query_class.hitbtc_query_mit_ema_simulation(Coin_symbol, EMA_periode, jomle + kalame, ema1, ema2, kalame)
     close, max, min, volume, volumeQuote, ema_satz, ema_drittel, target_diferenz, target_prozenz, target_polar, ema_volumen = aa1_daten_query_class.hitbtc_query_mit_ema_volumen_gewicht(Coin_symbol, EMA_periode, jomle + kalame, ema1, ema2, kalame)
@@ -43,7 +42,6 @@ for Coin_symbol in ergebnis:
         #target_prozent_polar_G = np.vstack([target_prozent_polar_G, target_prozent_polar])
         target_prozent_polar_G= np.append(target_prozent_polar_G, target_prozent_polar)
         target_prozent_polar_G = target_prozent_polar_G.ravel()
-    count += 1
 satz_wurfel = satz_wurfel_G
 target_prozent_polar = target_prozent_polar_G
 

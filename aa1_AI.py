@@ -32,10 +32,9 @@ class aa1_AI_class():
         exists = os.path.isfile(model_etiket)
         if exists:
             regressor = load_model(model_etiket)
-            history = regressor.fit(x_train, y_train, epochs = epochen, validation_data = (x_test, y_test))
         else:
             regressor = aa1_AI_class.lasagna_x(x_train)
-            history = regressor.fit(x_train, y_train, epochs = epochen, validation_data = (x_test, y_test))
+        history = regressor.fit(x_train, y_train, epochs = epochen, validation_data = (x_test, y_test))
         if save_AI_1 == 1:
             regressor.save(model_etiket)
         results_test  = regressor.predict(x_test)
