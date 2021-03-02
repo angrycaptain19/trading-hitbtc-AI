@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     # The stack log contains the stacks of the Data Blogger bot after each game (the initial stack is 100)
     stack_log = []
-    for round in range(1000):
+    for _ in range(1000):
         p1, p2 = blogger_bot, CallBot()
 
         config = setup_config(max_round=5, initial_stack=100, small_blind_amount=5)

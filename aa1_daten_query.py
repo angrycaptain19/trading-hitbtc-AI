@@ -83,8 +83,8 @@ class aa1_daten_query_class():
         min = np.array(min,dtype=float)
         volume = np.array(volume,dtype=float)
         volumeQuote = np.array(volumeQuote,dtype=float)
-        volume_avrage_btc = volume_avrage_btc/reale_zahl
-        close_avrage = close_avrage/reale_zahl
+        volume_avrage_btc /= reale_zahl
+        close_avrage /= reale_zahl
         ema_satz, ema_drittel = aa1_daten_hilfe_class.ema (close, reale_zahl, ema1, ema2)
         ema_satz = np.array(ema_satz, dtype=float)
         ema_drittel = np.array(ema_drittel, dtype=float)

@@ -4,7 +4,7 @@ from pypokerengine.players import BasePokerPlayer
 class ConsolePlayer(BasePokerPlayer):
 
   def __init__(self, input_receiver=None):
-    self.input_receiver = input_receiver if input_receiver else self.__gen_raw_input_wrapper()
+    self.input_receiver = input_receiver or self.__gen_raw_input_wrapper()
 
   def declare_action(self, valid_actions, hole_card, round_state):
     print(U.visualize_declare_action(valid_actions, hole_card, round_state, self.uuid))
@@ -64,9 +64,8 @@ class ConsolePlayer(BasePokerPlayer):
       amount = int(raw_amount)
       if min_amount <= amount and amount <= max_amount:
         return amount
-      else:
-        print("Invalid raise amount %d. Try again.")
-        return self.__receive_raise_amount_from_console(min_amount, max_amount)
+      print("Invalid raise amount %d. Try again.")
+      return self.__receive_raise_amount_from_console(min_amount, max_amount)
     except:
       print("Invalid input received. Try again.")
       return self.__receive_raise_amount_from_console(min_amount, max_amount)

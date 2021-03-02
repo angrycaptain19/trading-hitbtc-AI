@@ -60,23 +60,19 @@ def split_sequences(sequences, n_steps):
 def hist_price_dl_hitbtc_book(antwort,asking, bidding):
     btc = []
     btc_v = []
-    counter=0
-    for konto in asking:
+    for counter, konto in enumerate(asking):
         if counter >=2 and konto != "":#verursacht versetzung wegen ergebnis row
             btc.append(Decimal(konto))
             btc_v.append(Decimal(bidding[counter]))
-        counter+=1
     close  = []
     volume = []
     min = []
     max = []
     out_seq = []
-    counter=0
     summe=0
     osci = 0
     count_innen=0
-    for konto in antwort:
-        counter+=1
+    for counter, konto in enumerate(antwort, start=1):
         if counter >=2 and counter <= len(antwort)-1 :#akahri tush nn�miad wa az dowwomi shuru mishe
             close.append(konto['close'])
             summe+=Decimal(konto['close'])
@@ -96,15 +92,13 @@ def hist_price_dl_hitbtc(antwort,btc_result):
     min = []
     min_b = []
     out_seq = []
-    counter=0
     summe=0
     summe_b=0
     osci = 0
     osci_b = 0
     count_innen=0
     count_b=0
-    for konto in antwort:
-        counter+=1
+    for counter, konto in enumerate(antwort, start=1):
         if counter >=2 and counter <= len(antwort)-1 :#akahri tush nn�miad wa az dowwomi shuru mishe
             close.append(konto['close'])
             summe+=Decimal(konto['close'])
@@ -125,13 +119,11 @@ def hist_price_dl_hitbtc(antwort,btc_result):
 def hist_price_dl_hitbtc_alt(antwort,btc_result):
     btc = []
     btc_v = []
-    counter=0
     summe=0
     osci = 0
     count_innen=0
     max = []
-    for konto in btc_result:
-        counter+=1
+    for counter, konto in enumerate(btc_result, start=1):
         if counter <= len(btc_result)-1 and counter >=2:#verursacht versetzung wegen ergebnis row
             result = get_prozent(kurs_vortag,Decimal(konto['close']),0) - 100
             result = result * 10
@@ -149,13 +141,11 @@ def hist_price_dl_hitbtc_alt(antwort,btc_result):
     volume = []
     min = []
     out_seq = []
-    counter=0
     kurs_vortag = 0
     summe=0
     osci = 0
     count_innen=0
-    for konto in antwort:
-        counter+=1
+    for counter, konto in enumerate(antwort, start=1):
         if counter >=2 and counter <= len(antwort)-1 :#akahri tush nn�miad wa az dowwomi shuru mishe
             close.append(konto['close'])
             summe+=Decimal(konto['close'])
@@ -169,7 +159,7 @@ def hist_price_dl_hitbtc_alt(antwort,btc_result):
         if counter >=3:#az sewwomi shuru mishe
             out_seq.append(konto['close'])
         kurs_vortag = Decimal(konto['close'])
-    
+
     return btc,btc_v, volume, close, min, max, out_seq 
 def daten_repair_1(sc,daten):                                     #['778', '779', '703.8', '737.92', '701.41', '703.2
     daten =[float(numeric_string) for numeric_string in daten]    #[778.0, 779.0, 703.8, 737.92, 701.41, 703.28, 702.82, 
@@ -217,12 +207,9 @@ def korrektur(ergebniss,model_16,time_conect):
     #diferenz = [0]
     deferenz_einzeln = 0
     count=0
-    korected = []
     ki_close = 0
-    for number in range(0,time_conect):
-        korected.append(ergebniss[number])
-
-    for konto in model_16:
+    korected = [ergebniss[number] for number in range(time_conect)]
+    for _ in model_16:
         korected.append(model_16[count]-diferenz)
         val = ergebniss[count] - korected[count] #1:array([0.00208504]) 2:array([0.00208504])
         if val < 0:
@@ -230,7 +217,7 @@ def korrektur(ergebniss,model_16,time_conect):
         deferenz_einzeln += val
         ki_close = korected[count]
         count+=1
-    deferenz_einzeln = deferenz_einzeln/count
+    deferenz_einzeln /= count
     return korected, ki_close, deferenz_einzeln, count
 class Start():
     def diagram(Coin_symbol,ergebniss,ergebniss1,ergebniss2,ergebniss3,ergebniss4,endung):
@@ -311,19 +298,15 @@ class Start():
         bidding_ar_db = bidding_ar_db.split(',')
         asking_ar_db2 = []
         bidding_ar_db2 = []
-        counter=0
-        for konto in asking_ar_db:
+        for counter, konto in enumerate(asking_ar_db):
             if counter >=2 and konto != "":#verursacht versetzung wegen ergebnis row
                 asking_ar_db2.append(Decimal(konto))
                 bidding_ar_db2.append(Decimal(bidding_ar_db[counter]))
-            counter+=1
         return asking_ar_db2, bidding_ar_db2
     def load_train(Coin_symbol,steps,btc_result,epoche,time_takt,sequence):
         satz = 600
         antwort = requests.get("https://api.hitbtc.com/api/2/public/candles/"+str(Coin_symbol)+"?limit="+str(satz)+"&period="+time_takt).json()
-        result_H1 = []
-        for konto in antwort:
-            result_H1.append(Decimal(konto['close']))
+        result_H1 = [Decimal(konto['close']) for konto in antwort]
         btc_result = requests.get("https://api.hitbtc.com/api/2/public/candles/BTCUSD?limit="+str(satz)+"&period="+time_takt).json()
         btc_orderbook = requests.get("https://api.hitbtc.com/api/2/public/orderbook/BTCUSD?limit="+str(satz)+"").json()
         #asking, bidding = Start.ord_book_bid_ask(btc_orderbook,Coin_symbol)
@@ -385,11 +368,11 @@ class Start():
         plt.clf()
 
         diferenz = model_futur[0]-ergebniss[count-1]
-        korected_futur = []
-        count=0
-        for konto in model_futur:
-            korected_futur.append(model_futur[count]-diferenz)
-            count+=1
+        korected_futur = [
+            model_futur[count] - diferenz
+            for count, konto in enumerate(model_futur)
+        ]
+
         #Start.diagram(Coin_symbol,korected,ergebniss,0,0,0,'sys.png')
         return diferenz[0], deferenz_einzeln[0] , ki_close[0], model_18, model_19, model_20, korected_futur, result_H1
 
